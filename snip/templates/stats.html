@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Statistics for {{ stats.code }} | Snip{% endblock %}
+{% block content %}
+<h1>Statistics</h1>
+<p class="short"><a href="{{ short_url }}">{{ short_url }}</a>{% if stats.expired %} <span class="badge">Expired</span>{% endif %}</p>
+<p class="target">Goes to {{ stats.url }}</p>
+
+<div class="card">
+  <p class="label">Total clicks</p>
+  <p class="big">{{ stats.clicks }}</p>
+</div>
+
+<h2>Last 7 days</h2>
+<table class="chart">
+  <tbody>
+    {% for day in stats.daily %}
+    <tr>
+      <th scope="row">{{ day.date }}</th>
+      <td class="bar-cell"><meter min="0" max="{{ busiest or 1 }}" value="{{ day.clicks }}"></meter></td>
+      <td class="count">{{ day.clicks }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>Where clicks came from</h2>
+{% if stats.referrers %}
+<table>
+  <thead><tr><th scope="col">Source</th><th scope="col" class="count">Clicks</th></tr></thead>
+  <tbody>
+    {% for row in stats.referrers %}
+    <tr><td>{{ row.source }}</td><td class="count">{{ row.clicks }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No clicks yet.</p>
+{% endif %}
+{% endblock %}
